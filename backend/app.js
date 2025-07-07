@@ -1,8 +1,8 @@
 import express from "express";
-import { nanoid } from "nanoid";
 import dotenv from "dotenv";
 import connectDB from "./src/config/mongodb.config.js";
-import { shortUrl } from "./src/model/shorturl.model.js";
+import { shortUrl } from "./src/model/shortUrl.model.js";
+import shortUrlRoutes from "./src/routes/shortUrl.route.js";
 
 dotenv.config("./.env");
 
@@ -10,18 +10,18 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/api/create", (req, res) => {
-  const { url } = req.body;
-  connectDB();
-  const short = nanoid(7);
+connectDB();
 
-  const newUrl = new shortUrl({
-    fullUrl: url,
-    shortUrl: short,
-  });
-  newUrl.save();
-  console.log(url);
-  res.send(nanoid(7));
+app.use("/api", shortUrlRoutes);
+
+app.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const url = await shortUrl.findOne({ shortUrl: id });
+  if (url) {
+    res.redirect(url.fullUrl);
+  } else {
+    res.status(404).send("Not Found");
+  }
 });
 
 app.listen(5000, () => {
