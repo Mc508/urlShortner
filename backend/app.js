@@ -5,12 +5,16 @@ import { shortUrl } from "./src/model/shortUrl.model.js";
 import shortUrlRoutes from "./src/routes/shortUrl.route.js";
 import { redirectFromShortUrl } from "./src/controllers/shortUrl.controllers.js";
 import errorHandler from "./src/utils/errorHandler.js";
+import cors from "cors";
 
 dotenv.config("./.env");
 
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
 
 connectDB();
 

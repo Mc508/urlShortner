@@ -1,6 +1,10 @@
+import HomePage from "./pages/HomePage";
+
 const App = () => {
   return (
-    <div className="bg-amber-300">App</div>
-  )
-}
-export default App
+    <div >
+      <HomePage />
+    </div>
+  );
+};
+export default App;
