@@ -1,3 +1,4 @@
+import e from "express";
 import { shortUrl } from "../model/shortUrl.model.js";
 
 export const saveShortUrl = async (long, short, userId) => {
@@ -17,3 +18,7 @@ export const getShortUrl = async (short) => {
     { $inc: { clicks: 1 } }
   );
 };
+
+export const getCustomShortUrl = async (slug) => {
+  return await shortUrl.findOne({ shortUrl: slug });
+}
