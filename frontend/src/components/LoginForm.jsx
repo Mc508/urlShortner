@@ -1,17 +1,31 @@
 import React, { useState } from "react";
-import {useNavigate} from "@tanstack/react-router"
-function LoginForm() {
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../api/user.api.js";
+import { login } from "../store/slice/authSlice.js";
+function LoginForm({ state }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TO DO: Add authentication logic here
-    console.log(`Username: ${username}, Password: ${password}`);
-    
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await loginUser(username, password);
+      dispatch(login(data.user));
+      setLoading(false);
+      console.log("User logged in successfully");
+      navigate({ to: "/dashboard" });
+    } catch (error) {
+      setLoading(false);
+      setError(error.message || "Login failed");
+    }
   };
 
   return (
@@ -56,10 +70,21 @@ function LoginForm() {
         <button
           className="w-full bg-orange-600 text-white py-2 rounded-xl hover:bg-orange-800 transition"
           type="submit"
-          onSubmit={handleSubmit}
+          onClick={handleSubmit}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
+      </div>
+      <div className="text-center mt-4">
+        <p className="cursor-pointer text-sm text-gray-600">
+          Don't have an account?{" "}
+          <span
+            onClick={() => state(false)}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            Register
+          </span>
+        </p>
       </div>
     </div>
   );
