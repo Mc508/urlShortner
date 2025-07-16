@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { createShortUrl } from "../api/shortUrl.api";
+import { useSelector } from "react-redux";
+import { QueryClient } from "@tanstack/react-query";
 
 const UrlForm = () => {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState();
   const [copied, setCopied] = useState();
+  const [customSlug, setCustomSlug] = useState("");
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   //   console.log(url);
   const handleClick = async (e) => {
     e.preventDefault();
-    const shortUrl = await createShortUrl(url)
+    const shortUrl = await createShortUrl(url, customSlug);
+    QueryClient.invalidateQueries({ queryKey: ["userUrls"] });
 
     setShortUrl(shortUrl);
-    
   };
   const handleCopy = () => {
     navigator.clipboard.writeText(shortUrl);
@@ -59,6 +63,16 @@ const UrlForm = () => {
             </button>
           </div>
         </div>
+      )}
+      {isAuthenticated && (
+        <input
+          type="url"
+          value={customSlug}
+          onChange={(e) => setCustomSlug(e.target.value)}
+          placeholder="Enter your long URL"
+          className="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          // required
+        />
       )}
     </div>
   );

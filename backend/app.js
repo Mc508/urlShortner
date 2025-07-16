@@ -8,6 +8,7 @@ import authRoutes from "./src/routes/auth.route.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { attachUser } from "./src/utils/attachUser.js";
+import userRoutes from "./src/routes/user.route.js";
 dotenv.config("./.env");
 
 const app = express();
@@ -24,9 +25,9 @@ app.use(cookieParser());
 
 connectDB();
 app.use(attachUser);
-app.use("/api/auth/", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", shortUrlRoutes);
-
 app.get("/:id", redirectFromShortUrl);
 
 app.use(errorHandler);

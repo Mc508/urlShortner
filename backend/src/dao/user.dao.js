@@ -1,3 +1,4 @@
+import { shortUrl } from "../model/shortUrl.model.js";
 import { User } from "../model/user.model.js";
 
 export const findUserByEmail = async (email) => {
@@ -19,5 +20,5 @@ export const createUser = async (name, email, password) => {
 };
 
 export const getAllUserUrlsDao = async (id) => {
-  return await User.findById(id).populate("urls");
+  return await shortUrl.find({ user: id });
 };

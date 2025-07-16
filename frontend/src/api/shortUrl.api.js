@@ -1,15 +1,13 @@
 import { axiosInstance, handleAxiosError } from "../utils/axiosInstance";
 
-export const createShortUrl = async (url) => {
+export const createShortUrl = async (url, slug) => {
   try {
     const { data } = await axiosInstance.post("/api/create", {
       url,
+      slug,
     });
-    console.log(data);
     return data.shortUrl;
   } catch (error) {
     handleAxiosError(error);
   }
 };
-
-
